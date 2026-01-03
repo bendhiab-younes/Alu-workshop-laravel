@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: promo-alu-plus
+    runtime: php
+    runtimeVersion: 8.3
+    buildCommand: |
+      composer install --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+    startCommand: |
+      php artisan migrate --force
+      php artisan db:seed --force
+      php artisan optimize
+      php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: LOG_CHANNEL
+        value: stderr
